@@ -1,3 +1,6 @@
+
+const config = require('config');
+const helmet = require('helmet');
 const Joi = require('joi'); // because joi returns a class
 const logger = require('./logger');
 const authenticate = require('./Authentication');
@@ -6,9 +9,17 @@ const app = express();
 
 // using a middlewire in request processing pipeline
 // to get post body parameters as json
+
+app.set('view engine', 'pug');
+app.set('views', './views');
+
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(express.static('public'));
+app.use(helmet());
+
+
+
 
 app.use(logger);
 app.use(authenticate);
@@ -25,6 +36,10 @@ const joneres = [
   {id: 2, name: 'comedy'},
   {id: 3, name: 'horror'}
 ];
+
+app.get('/', (request, response) => {
+  response.render('index', {title: 'My Express App', message: 'Hello Ony !!!'});
+});
 
 
 app.get('/api/joneres', (request, response) => {
